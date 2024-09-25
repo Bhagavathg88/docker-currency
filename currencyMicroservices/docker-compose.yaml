@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  currency-exchange:
+    image: d69e444aa0d8
+    ports:
+      - "9080:7000"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:9081/eureka
+  currency-conversion:
+    image: 11ec4b67fa39
+
+    ports:
+      - "9082:8100"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:9081/eureka
+  api-gateway:
+    image: b2810aa58086
+
+    ports:
+      - "9083:8765"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:9081/eureka
+
+  naming-server:
+    image: 25801a733310
+    ports:
+      - "9081:9081"
+    networks:
+      - currency-network
+
+
+
+networks:
+  currency-network:
